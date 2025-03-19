@@ -4,111 +4,84 @@
 Sistema de gestión de estacionamiento desarrollado con NestJS que permite administrar espacios de estacionamiento, usuarios y reservas de manera eficiente y segura.
 
 ## Tecnologías Utilizadas
-- NestJS
+- NestJS (Framework de Backend)
 - TypeScript
-- PostgreSQL
-- MongoDB
-- Docker
+- PostgreSQL (Base de datos principal)
+- MongoDB (Base de datos para trazas)
+- Docker & Docker Compose
 - Jest (Testing)
+- Swagger (Documentación API)
+- JWT (Autenticación)
 
 ## Requisitos Previos
-- Node.js (v14 o superior)
-- npm o yarn
-- PostgreSQL
-- MongoDB
-- Docker (opcional)
+- Node.js (v16 o superior)
+- npm (v8 o superior) o yarn
+- PostgreSQL (v13 o superior)
+- MongoDB (v5 o superior)
+- Docker & Docker Compose (opcional)
 
 ## Instalación y Configuración
 
 1. **Clonar el repositorio**
 ```bash
-git clone <url-del-repositorio>
-cd parking-system
+git clone git@github.com:dubetdev/api-parking.git
+
+cd api-parking
 ```
 
 2. **Instalar dependencias**
 ```bash
 yarn install
+
 ```
 
 3. **Configurar variables de entorno**
 ```bash
-cp .env.local.example .env.local
+cp .env.local .env
+```
+
+Edita el archivo `.env` con tus configuraciones:
+```env
+# Base de datos
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=usuario
+DB_PASSWORD=contraseña
+DB_NAME=parking_db
+
+# MongoDB
+MONGO_URI=mongodb://localhost:27017/parking_traces
+
+# JWT
+JWT_SECRET=tu_secret_key
+JWT_EXPIRATION=24h
 ```
 
 4. **Iniciar la aplicación**
 ```bash
 # Modo desarrollo
-yarn run start:dev
+yarn start:dev
+# o
+npm run start:dev
 
 # Modo producción
-yarn run start:prod
+yarn start:prod
+# o
+npm run start:prod
 ```
 
 ## Configuración Docker
 
+1. **Construir y ejecutar servicios**
 ```bash
-# Construir y ejecutar con docker-compose
+# Desarrollo
 docker-compose up -d
+
+# Producción
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
-## Estructura del Proyecto
-```
-src/
-├── common/         # Servicios y utilidades comunes
-│   ├── config/     # Configuraciones globales
-│   ├── decorators/ # Decoradores personalizados
-│   └── services/   # Servicios base y utilidades
-├── parking/        # Módulo de gestión de estacionamiento
-│   ├── dto/        # Data Transfer Objects
-│   ├── entities/   # Entidades de estacionamiento
-│   ├── services/   # Servicios de estacionamiento
-│   └── controllers/# Controladores de estacionamiento
-├── users/          # Módulo de usuarios
-│   ├── dto/        # Data Transfer Objects
-│   ├── entities/   # Entidades de usuario
-│   ├── services/   # Servicios de usuarios
-│   └── controllers/# Controladores de usuarios
-├── auth/           # Módulo de autenticación
-│   ├── guards/     # Guards de autenticación
-│   ├── strategies/ # Estrategias de autenticación
-│   └── services/   # Servicios de autenticación
-├── reservations/   # Módulo de reservas
-│   ├── dto/        # Data Transfer Objects
-│   ├── entities/   # Entidades de reservas
-│   ├── services/   # Servicios de reservas
-│   └── controllers/# Controladores de reservas
-├── traces/         # Módulo de trazas
-│   ├── dto/        # Data Transfer Objects
-│   ├── entities/   # Entidades de trazas
-│   ├── services/   # Servicios de trazas
-│   └── controllers/# Controladores de trazas
-└── main.ts         # Punto de entrada de la aplicación
-```
-
-## Pruebas
-
+2. **Detener servicios**
 ```bash
-# Ejecutar pruebas unitarias
-yarn run test
-
-# Ejecutar pruebas e2e
-yarn run test:e2e
-
-# Ver cobertura de pruebas
-yarn run test:cov
+docker-compose down
 ```
-
-## Documentación
-La documentación de la API está disponible en:
-- Swagger UI: `http://localhost:3000/api`
-- Colección Postman: Importar el archivo `parking-system.postman_collection.json`
-
-## Scripts Disponibles
-- `yarn start` - Inicia la aplicación en modo desarrollo
-- `yarn start:dev` - Inicia la aplicación con hot-reload
-- `yarn start:prod` - Inicia la aplicación en modo producción
-- `yarn test` - Ejecuta pruebas unitarias
-- `yarn test:e2e` - Ejecuta pruebas end-to-end
-- `yarn lint` - Ejecuta el linter
-
