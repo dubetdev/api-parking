@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:3000"
+    environment:
+      - NODE_ENV=production
+      # PostgreSQL variables
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=mysecretpassword
+      - DB_DATABASE=parking_db
+      # MongoDB variables
+      - DB_MONGO_DATABASE=mongodb://mongodb:27017/parking_db
+    depends_on:
+      - postgres
+      - mongodb
+    networks:
+      - parking-network
+
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=parking_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - parking-network
+
+  mongodb:
+    image: mongo:6-jammy
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - parking-network
+
+networks:
+  parking-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mongodb_data:
