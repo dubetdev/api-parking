@@ -67,6 +67,46 @@
             },
             "description": "Authenticate user and get JWT token"
           }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"newuser@example.com\",\n    \"password\": \"strongPassword123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user"
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{refreshToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            },
+            "description": "Refresh access token using refresh token"
+          }
         }
       ]
     },
@@ -212,10 +252,44 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/parking/availability",
+              "raw": "{{baseUrl}}/parking/spots/available",
               "host": ["{{baseUrl}}"],
-              "path": ["parking", "availability"]
-            }
+              "path": ["parking", "spots", "available"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "{{date}}",
+                  "description": "Optional date parameter (YYYY-MM-DD)"
+                }
+              ]
+            },
+            "description": "Get list of available parking spots"
+          }
+        },
+        {
+          "name": "Create Parking Spot",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"number\": \"A-123\",\n    \"type\": \"standard\",\n    \"status\": \"available\",\n    \"floor\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/parking/spots",
+              "host": ["{{baseUrl}}"],
+              "path": ["parking", "spots"]
+            },
+            "description": "Create a new parking spot"
           }
         }
       ]
@@ -355,15 +429,33 @@
       ]
     }
   ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Add current date in YYYY-MM-DD format",
+          "const today = new Date().toISOString().split('T')[0];",
+          "pm.environment.set('date', today);"
+        ]
+      }
+    }
+  ],
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:3000",
+      "value": "http://localhost:3000/api",
       "type": "string"
     },
     {
       "key": "authToken",
-      "value": "your-jwt-token-here",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
       "type": "string"
     }
   ],
